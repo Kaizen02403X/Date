@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Go Out With Me? 🥷✨</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Floating Background Particles -->
+    <div class="particles-container" id="particlesContainer"></div>
+
+    <div class="container">
+        <!-- Humanoid Interactive Avatar Card -->
+        <div class="avatar-card" id="avatarCard">
+            <div class="ninja-avatar" id="ninjaAvatar">
+                <!-- Headband & Back Tail -->
+                <div class="headband-tail"></div>
+                <div class="headband">
+                    <div class="headband-knot"></div>
+                </div>
+                
+                <!-- Ears -->
+                <div class="ear left"></div>
+                <div class="ear right"></div>
+
+                <!-- Face -->
+                <div class="face">
+                    <!-- Cheeks (Blush) -->
+                    <div class="cheek left"></div>
+                    <div class="cheek right"></div>
+
+                    <!-- Eyes -->
+                    <div class="eye left" id="leftEye">
+                        <div class="pupil"></div>
+                        <div class="sparkle"></div>
+                    </div>
+                    <div class="eye right" id="rightEye">
+                        <div class="pupil"></div>
+                        <div class="sparkle"></div>
+                    </div>
+
+                    <!-- Eyebrows -->
+                    <div class="eyebrow left" id="leftEyebrow"></div>
+                    <div class="eyebrow right" id="rightEyebrow"></div>
+
+                    <!-- Mask Bridge / Nose -->
+                    <div class="nose"></div>
+
+                    <!-- Mouth -->
+                    <div class="mouth" id="mouth"></div>
+                </div>
+
+                <!-- Body / Torso -->
+                <div class="body">
+                    <div class="shuriken-badge">🥷</div>
+                </div>
+
+                <!-- Arms with Hands -->
+                <div class="arm left" id="leftArm">
+                    <div class="hand"></div>
+                </div>
+                <div class="arm right" id="rightArm">
+                    <div class="hand"></div>
+                </div>
+            </div>
+
+            <div class="speech-bubble" id="speechBubble">
+                Hey there, future ninja partner... 🥷💖
+            </div>
+        </div>
+
+        <!-- Main Question Section -->
+        <div class="card-content" id="mainCard">
+            <h1 class="title">Mission Objective:<br><span class="highlight">Go Out On A Date With Me?</span></h1>
+            <p class="subtitle" id="subtitleText">Your mission, should you choose to accept it, involves food, fun, and top-secret vibes.</p>
+
+            <!-- Interactive Buttons -->
+            <div class="button-group" id="buttonGroup">
+                <button class="btn btn-yes" id="yesBtn">
+                    <span class="btn-icon">✨</span> Accept Mission (Yes!)
+                </button>
+                <button class="btn btn-no" id="noBtn">
+                    Decline (No)
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden Date Planner Section (Revealed on Yes) -->
+        <div class="date-planner hidden" id="datePlanner">
+            <h2>🎉 Mission Accepted! Customize Your Date</h2>
+            <p class="planner-subtitle">Select your preferences for our secret operation:</p>
+            
+            <div class="planner-options">
+                <div class="option-group">
+                    <label>🍜 Choose Activity / Vibe</label>
+                    <div class="chip-select" id="activityChips">
+                        <button class="chip active" data-value="Sushi & Secret Ramen">Sushi & Ramen 🍜</button>
+                        <button class="chip" data-value="Midnight Cafe & Pastries">Midnight Cafe ☕</button>
+                        <button class="chip" data-value="Arcade & Gaming Showdown">Arcade Battle 🕹️</button>
+                        <button class="chip" data-value="Stargazing & Hot Chocolate">Stargazing ✨</button>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label>🕒 When are you free?</label>
+                    <input type="text" id="dateTimeInput" value="This Friday @ 7:00 PM" class="planner-input">
+                </div>
+
+                <div class="option-group">
+                    <label>🎁 Special Snack / Reward</label>
+                    <div class="chip-select" id="snackChips">
+                        <button class="chip active" data-value="Boba Milk Tea">Boba Tea 🧋</button>
+                        <button class="chip" data-value="Mochi Ice Cream">Mochi 🍡</button>
+                        <button class="chip" data-value="Chocolate Cake">Cake 🍰</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-seal" id="sealDealBtn">
+                🔏 Lock In Mission & Send Scroll
+            </button>
+        </div>
+
+        <!-- Final Confirmation Scroll -->
+        <div class="success-scroll hidden" id="successScroll">
+            <div class="scroll-icon">📜</div>
+            <h2>Secret Mission Confirmed!</h2>
+            <div class="summary-box" id="missionSummary">
+                <!-- Populated via JS -->
+            </div>
+            <button class="btn btn-copy" id="copySummaryBtn">📋 Copy Mission Details</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
