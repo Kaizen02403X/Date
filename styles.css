@@ -1,32 +1,79 @@
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+    }
+
     body {
       font-family: 'Outfit', sans-serif;
       background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 60%, #020617 100%);
       color: #f8fafc;
       overflow-x: hidden;
       min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      position: relative;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #particle-container {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    #particle-container .particle,
+    body > .absolute {
+      pointer-events: none;
+    }
+
+    main {
+      position: relative;
+      z-index: 10;
+      width: min(100%, 32rem);
+      margin: auto;
+      padding: 1.5rem;
+      border: 1px solid rgba(30, 41, 59, 0.8);
+      border-radius: 1.5rem;
+      background: rgba(15, 23, 42, 0.9);
+      text-align: center;
     }
 
     .font-heading {
       font-family: 'Fredoka One', cursive;
     }
 
-    /* Floating ambient background items */
     .particle {
       position: absolute;
+      top: -12vh;
       pointer-events: none;
-      animation: floatUp 8s infinite linear;
-      opacity: 0.6;
+      user-select: none;
+      animation: glitterFall 8s infinite linear;
+      opacity: 0;
+      will-change: transform, opacity;
+      filter: drop-shadow(0 0 6px rgba(251, 113, 133, 0.75));
     }
 
-    @keyframes floatUp {
+    @keyframes glitterFall {
       0% {
-        transform: translateY(100vh) rotate(0deg) scale(0.8);
+        transform: translate3d(0, -12vh, 0) rotate(0deg) scale(0.8);
         opacity: 0;
       }
-      20% { opacity: 0.8; }
-      80% { opacity: 0.8; }
+      15% { opacity: 0.9; }
+      75% { opacity: 0.8; }
       100% {
-        transform: translateY(-10vh) rotate(360deg) scale(1.2);
+        transform: translate3d(24px, 112vh, 0) rotate(360deg) scale(1.2);
         opacity: 0;
       }
     }
@@ -43,7 +90,31 @@
     }
 
     .ninja-eye {
-      transition: transform 0.1s ease-out, ry 0.2s;
+      transform-box: fill-box;
+      transform-origin: center;
+      transition: transform 0.12s ease-out;
+    }
+
+    #button-boundary {
+      position: relative;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #btn-yes,
+    #btn-no,
+    #btn-lock-in,
+    #btn-copy,
+    #btn-restart,
+    .option-btn {
+      cursor: pointer;
+    }
+
+    #btn-no {
+      position: absolute;
+      z-index: 10;
     }
 
     .ninja-scarf {
@@ -87,4 +158,26 @@
     ::-webkit-scrollbar-thumb {
       background: #f43f5e;
       border-radius: 4px;
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 1.25rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .particle {
+        animation: none;
+        opacity: 0.5;
+      }
     }
