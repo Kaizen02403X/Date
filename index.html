@@ -1,141 +1,214 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Will You Go Out With Me? 🥷✨</title>
-    <link rel="stylesheet" href="styles.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Caveat:wght@700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Secret Mission... Just For You! 🥷✨</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Fredoka+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="flex flex-col items-center justify-center p-4 min-h-screen relative selection:bg-rose-500 selection:text-white">
 
-    <!-- Floating Background Particles -->
-    <div class="particles-container" id="particlesContainer"></div>
+  <!-- Floating Particles Canvas Container -->
+  <div id="particle-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
-    <div class="container">
-        <!-- Humanoid Interactive Avatar Card -->
-        <div class="avatar-card" id="avatarCard">
-            <div class="ninja-avatar" id="ninjaAvatar">
-                <!-- Headband & Back Tail -->
-                <div class="headband-tail"></div>
-                <div class="headband">
-                    <div class="headband-knot"></div>
-                </div>
-                
-                <!-- Ears -->
-                <div class="ear left"></div>
-                <div class="ear right"></div>
+  <!-- Background decorative elements -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 bg-rose-600/20 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
-                <!-- Face -->
-                <div class="face">
-                    <!-- Cheeks (Blush) -->
-                    <div class="cheek left"></div>
-                    <div class="cheek right"></div>
+  <!-- Main Card Container -->
+  <main class="relative z-10 w-full max-w-lg bg-slate-900/80 backdrop-blur-xl border border-slate-800/80 rounded-3xl p-6 md:p-8 shadow-2xl shadow-rose-950/30 text-center transition-all duration-500">
 
-                    <!-- Eyes -->
-                    <div class="eye left" id="leftEye">
-                        <div class="pupil"></div>
-                        <div class="sparkle"></div>
-                    </div>
-                    <div class="eye right" id="rightEye">
-                        <div class="pupil"></div>
-                        <div class="sparkle"></div>
-                    </div>
-
-                    <!-- Eyebrows -->
-                    <div class="eyebrow left" id="leftEyebrow"></div>
-                    <div class="eyebrow right" id="rightEyebrow"></div>
-
-                    <!-- Mask Bridge / Nose -->
-                    <div class="nose"></div>
-
-                    <!-- Mouth -->
-                    <div class="mouth" id="mouth"></div>
-                </div>
-
-                <!-- Body / Torso -->
-                <div class="body">
-                    <div class="shuriken-badge">🥷</div>
-                </div>
-
-                <!-- Arms with Hands -->
-                <div class="arm left" id="leftArm">
-                    <div class="hand"></div>
-                </div>
-                <div class="arm right" id="rightArm">
-                    <div class="hand"></div>
-                </div>
-            </div>
-
-            <div class="speech-bubble" id="speechBubble">
-                Hey there, future ninja partner... 🥷💖
-            </div>
-        </div>
-
-        <!-- Main Question Section -->
-        <div class="card-content" id="mainCard">
-            <h1 class="title">Mission Objective:<br><span class="highlight">Go Out On A Date With Me?</span></h1>
-            <p class="subtitle" id="subtitleText">Your mission, should you choose to accept it, involves food, fun, and top-secret vibes.</p>
-
-            <!-- Interactive Buttons -->
-            <div class="button-group" id="buttonGroup">
-                <button class="btn btn-yes" id="yesBtn">
-                    <span class="btn-icon">✨</span> Accept Mission (Yes!)
-                </button>
-                <button class="btn btn-no" id="noBtn">
-                    Decline (No)
-                </button>
-            </div>
-        </div>
-
-        <!-- Hidden Date Planner Section (Revealed on Yes) -->
-        <div class="date-planner hidden" id="datePlanner">
-            <h2>🎉 Mission Accepted! Customize Your Date</h2>
-            <p class="planner-subtitle">Select your preferences for our secret operation:</p>
-            
-            <div class="planner-options">
-                <div class="option-group">
-                    <label>🍜 Choose Activity / Vibe</label>
-                    <div class="chip-select" id="activityChips">
-                        <button class="chip active" data-value="Sushi & Secret Ramen">Sushi & Ramen 🍜</button>
-                        <button class="chip" data-value="Midnight Cafe & Pastries">Midnight Cafe ☕</button>
-                        <button class="chip" data-value="Arcade & Gaming Showdown">Arcade Battle 🕹️</button>
-                        <button class="chip" data-value="Stargazing & Hot Chocolate">Stargazing ✨</button>
-                    </div>
-                </div>
-
-                <div class="option-group">
-                    <label>🕒 When are you free?</label>
-                    <input type="text" id="dateTimeInput" value="This Friday @ 7:00 PM" class="planner-input">
-                </div>
-
-                <div class="option-group">
-                    <label>🎁 Special Snack / Reward</label>
-                    <div class="chip-select" id="snackChips">
-                        <button class="chip active" data-value="Boba Milk Tea">Boba Tea 🧋</button>
-                        <button class="chip" data-value="Mochi Ice Cream">Mochi 🍡</button>
-                        <button class="chip" data-value="Chocolate Cake">Cake 🍰</button>
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-seal" id="sealDealBtn">
-                🔏 Lock In Mission & Send Scroll
-            </button>
-        </div>
-
-        <!-- Final Confirmation Scroll -->
-        <div class="success-scroll hidden" id="successScroll">
-            <div class="scroll-icon">📜</div>
-            <h2>Secret Mission Confirmed!</h2>
-            <div class="summary-box" id="missionSummary">
-                <!-- Populated via JS -->
-            </div>
-            <button class="btn btn-copy" id="copySummaryBtn">📋 Copy Mission Details</button>
-        </div>
+    <!-- Header Badge -->
+    <div id="badge" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold uppercase tracking-wider mb-4 bounce-subtle">
+      <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+      Top Secret Scroll Invocation
     </div>
 
-    <script src="app.js"></script>
+    <!-- Humanoid Animated Avatar Canvas / SVG -->
+    <div class="relative w-48 h-48 mx-auto my-2 cursor-pointer group" id="avatar-container">
+      <!-- Smoke Puff BG Effect -->
+      <div id="smoke-effect" class="absolute inset-0 bg-slate-400/10 rounded-full blur-xl opacity-0 scale-50 transition-all duration-300"></div>
+
+      <!-- Speech Bubble -->
+      <div id="speech-bubble" class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-slate-900 font-semibold text-xs py-1.5 px-3 rounded-2xl shadow-lg border-2 border-rose-400 whitespace-nowrap opacity-90 transition-all duration-300 transform scale-100 z-20">
+        Pssst... I have a proposal! 🥷
+      </div>
+
+      <svg id="ninja-avatar" viewBox="0 0 200 200" class="w-full h-full drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+        <!-- Shadow -->
+        <ellipse cx="100" cy="185" rx="45" ry="10" fill="#000" opacity="0.4"/>
+
+        <!-- Humanoid Ninja Body -->
+        <g class="ninja-body" id="ninja-body">
+          <!-- Torso / Gi -->
+          <path d="M 65 130 C 65 110, 135 110, 135 130 L 142 180 C 142 185, 58 185, 58 180 Z" fill="#1e293b"/>
+          <!-- Belt / Obi -->
+          <rect x="62" y="145" width="76" height="12" rx="3" fill="#e11d48"/>
+          <path d="M 95 157 L 90 178 L 100 178 Z" fill="#be123c"/>
+          <path d="M 100 157 L 108 175 L 100 175 Z" fill="#9f1239"/>
+
+          <!-- Floating Ninja Hands -->
+          <circle id="hand-left" cx="52" cy="142" r="11" fill="#fbcfe8" class="transition-transform duration-300"/>
+          <circle id="hand-right" cx="148" cy="142" r="11" fill="#fbcfe8" class="transition-transform duration-300"/>
+
+          <!-- Scarf Tails -->
+          <path class="ninja-scarf" d="M 130 115 Q 160 120, 170 140 Q 155 135, 132 122 Z" fill="#f43f5e"/>
+          <path class="ninja-scarf" d="M 128 118 Q 150 135, 155 160 Q 142 145, 126 125 Z" fill="#e11d48"/>
+        </g>
+
+        <!-- Head Group (Follows Mouse) -->
+        <g class="ninja-head" id="ninja-head">
+          <!-- Head Base -->
+          <circle cx="100" cy="85" r="42" fill="#1e293b"/>
+          <!-- Face Cutout / Skin -->
+          <path d="M 72 75 C 72 65, 128 65, 128 75 C 128 92, 72 92, 72 75 Z" fill="#fbcfe8"/>
+
+          <!-- Eyes Container -->
+          <g id="eyes-group">
+            <!-- Left Eye -->
+            <ellipse id="eye-left-bg" cx="87" cy="78" rx="6" ry="8" fill="#0f172a"/>
+            <ellipse id="eye-left-pupil" class="ninja-eye" cx="87" cy="78" rx="2.5" ry="3.5" fill="#ffffff"/>
+
+            <!-- Right Eye -->
+            <ellipse id="eye-right-bg" cx="113" cy="78" rx="6" ry="8" fill="#0f172a"/>
+            <ellipse id="eye-right-pupil" class="ninja-eye" cx="113" cy="78" rx="2.5" ry="3.5" fill="#ffffff"/>
+          </g>
+
+          <!-- Expressive Eyebrows -->
+          <path id="brow-left" d="M 80 67 Q 87 65, 93 68" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          <path id="brow-right" d="M 107 68 Q 113 65, 120 67" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+
+          <!-- Mouth / Reaction -->
+          <path id="ninja-mouth" d="M 94 85 Q 100 87, 106 85" stroke="#0f172a" stroke-width="2" stroke-linecap="round" fill="none"/>
+
+          <!-- Blushing cheeks (Hidden by default) -->
+          <circle id="blush-left" cx="77" cy="84" r="5" fill="#f43f5e" opacity="0" class="transition-opacity duration-300"/>
+          <circle id="blush-right" cx="123" cy="84" r="5" fill="#f43f5e" opacity="0" class="transition-opacity duration-300"/>
+
+          <!-- Headband Metal Plate -->
+          <rect x="76" y="52" width="48" height="12" rx="3" fill="#94a3b8"/>
+          <!-- Leaf / Ninja Symbol -->
+          <circle cx="100" cy="58" r="3" fill="#1e293b"/>
+          <path d="M 97 58 Q 100 54, 103 58" stroke="#1e293b" stroke-width="1" fill="none"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Step 1: Proposal Section -->
+    <div id="step-proposal" class="space-y-6 transition-all duration-500">
+      <div class="space-y-2">
+        <h1 class="text-3xl md:text-4xl font-extrabold font-heading bg-gradient-to-r from-rose-400 via-pink-300 to-indigo-300 bg-clip-text text-transparent">
+          Would you like to go on a secret date with me?
+        </h1>
+        <p class="text-slate-400 text-sm md:text-base">
+          No jutsu can hide how much I'd love to hang out with you! 🌸
+        </p>
+      </div>
+
+      <!-- Interactive Decision Buttons Area -->
+      <div class="relative min-h-[120px] flex items-center justify-center gap-4 py-4" id="button-boundary">
+        <!-- Yes Button -->
+        <button id="btn-yes" class="glow-yes relative z-10 px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-lg rounded-2xl transition-all duration-300 hover:scale-110 active:scale-95 shadow-lg flex items-center gap-2">
+          <span>YES, ABSOLUTELY!</span> 💖
+        </button>
+
+        <!-- No Button (Runaway mechanic) -->
+        <button id="btn-no" class="absolute z-10 px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-base rounded-2xl transition-all duration-200 border border-slate-700 shadow-md">
+          No way 😜
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 2: Interactive Date Planner (Revealed on YES) -->
+    <div id="step-planner" class="hidden space-y-6 text-left transition-all duration-500">
+      <div class="text-center space-y-1">
+        <h2 class="text-2xl font-bold font-heading text-rose-400">Mission Confirmed! 🎉</h2>
+        <p class="text-xs text-slate-400">Customize our perfect mission itinerary below:</p>
+      </div>
+
+      <!-- Activity Selection -->
+      <div class="space-y-2">
+        <label class="text-xs font-semibold uppercase tracking-wider text-rose-300">1. Select Mission Activity</label>
+        <div class="grid grid-cols-2 gap-2" id="activity-options">
+          <button data-value="Ramen & Boba Night 🍜" class="option-btn active p-3 rounded-xl bg-rose-500/20 border border-rose-500/50 text-rose-200 text-xs md:text-sm font-medium flex items-center gap-2 transition-all hover:bg-rose-500/30">
+            <span>🍜</span> Ramen & Boba
+          </button>
+          <button data-value="Arcade & Games 🎮" class="option-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs md:text-sm font-medium flex items-center gap-2 transition-all hover:bg-rose-500/30">
+            <span>🎮</span> Arcade Battle
+          </button>
+          <button data-value="Cozy Coffee & Stroll ☕" class="option-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs md:text-sm font-medium flex items-center gap-2 transition-all hover:bg-rose-500/30">
+            <span>☕</span> Coffee & Walk
+          </button>
+          <button data-value="Late Night Sunset & Walk 🌙" class="option-btn p-3 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs md:text-sm font-medium flex items-center gap-2 transition-all hover:bg-rose-500/30">
+            <span>🌙</span> Sunset View
+          </button>
+        </div>
+      </div>
+
+      <!-- Date / Time Picker -->
+      <div class="grid grid-cols-2 gap-3">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold uppercase tracking-wider text-rose-300">2. Date</label>
+          <input type="date" id="date-picker" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500">
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold uppercase tracking-wider text-rose-300">3. Time</label>
+          <input type="time" id="time-picker" value="18:30" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500">
+        </div>
+      </div>
+
+      <!-- Treat Selection -->
+      <div class="space-y-2">
+        <label class="text-xs font-semibold uppercase tracking-wider text-rose-300">4. Target Snack / Treat</label>
+        <select id="snack-select" class="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500">
+          <option>Taro Milk Tea with Boba 🧋</option>
+          <option>Matcha Parfait 🍨</option>
+          <option>Warm Taiyaki & Ice Cream 🐟</option>
+          <option>Surprise Me! 🎁</option>
+        </select>
+      </div>
+
+      <!-- Action Button to Generate Scroll -->
+      <button id="btn-lock-in" class="w-full py-3.5 bg-gradient-to-r from-rose-500 to-indigo-600 hover:from-rose-600 hover:to-indigo-700 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-rose-900/40 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+        <span>Seal The Secret Scroll</span> 📜✨
+      </button>
+    </div>
+
+    <!-- Step 3: Final Scroll Summary -->
+    <div id="step-summary" class="hidden space-y-6 transition-all duration-500 text-center">
+      <div class="inline-block p-3 bg-rose-500/20 rounded-full text-rose-400 mb-1">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+      </div>
+      <h2 class="text-2xl font-bold font-heading text-rose-300">Scroll Officially Sealed! 🥷</h2>
+
+      <!-- Receipt Card -->
+      <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 text-left space-y-3 font-mono text-xs relative overflow-hidden">
+        <div class="absolute top-0 right-0 bg-rose-500 text-white font-sans text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-widest">
+          APPROVED
+        </div>
+        <p class="text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-2">Mission Itinerary</p>
+        <div class="flex justify-between"><span class="text-slate-400">Activity:</span><span id="sum-activity" class="text-rose-300 font-bold">Ramen & Boba</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Date:</span><span id="sum-date" class="text-slate-200">This Weekend</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Time:</span><span id="sum-time" class="text-slate-200">6:30 PM</span></div>
+        <div class="flex justify-between"><span class="text-slate-400">Snack:</span><span id="sum-snack" class="text-slate-200">Boba</span></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 gap-3">
+        <button id="btn-copy" class="py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all">
+          <span>📋 Copy Invite</span>
+        </button>
+        <button id="btn-restart" class="py-3 px-4 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-rose-500/30">
+          <span>🔄 Edit Details</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>

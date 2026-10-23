@@ -1,208 +1,256 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const mainCard = document.getElementById('mainCard');
-    const datePlanner = document.getElementById('datePlanner');
-    const successScroll = document.getElementById('successScroll');
-    const sealDealBtn = document.getElementById('sealDealBtn');
-    const speechBubble = document.getElementById('speechBubble');
-    
-    // Avatar Elements
-    const leftEye = document.getElementById('leftEye');
-    const rightEye = document.getElementById('rightEye');
-    const leftArm = document.getElementById('leftArm');
-    const rightArm = document.getElementById('rightArm');
-    const mouth = document.getElementById('mouth');
-    const leftEyebrow = document.getElementById('leftEyebrow');
-    const rightEyebrow = document.getElementById('rightEyebrow');
-    const ninjaAvatar = document.getElementById('ninjaAvatar');
+    // --- State Management ---
+    const defaultDate = new Date();
+    defaultDate.setDate(defaultDate.getDate() + 2);
 
-    // Interactive State
-    let noHoverCount = 0;
-    const noPhrases = [
-        "Decline (No)",
-        "Are you sure? 🥺",
-        "Think again! 🥷",
-        "Wrong button!",
-        "Nice try, click Yes!",
-        "Error 404: No not found"
-    ];
+    const state = {
+      noHoverCount: 0,
+      selectedActivity: 'Ramen & Boba Night 🍜',
+      date: [
+        defaultDate.getFullYear(),
+        String(defaultDate.getMonth() + 1).padStart(2, '0'),
+        String(defaultDate.getDate()).padStart(2, '0')
+      ].join('-'),
+      time: '18:30',
+      snack: 'Taro Milk Tea with Boba 🧋'
+    };
 
-    const avatarDialogues = [
-        "Hey there, future ninja partner... 🥷💖",
-        "My sensors detect you're hesitating! 👀",
-        "The 'Yes' button is looking very shiny right now ✨",
-        "Resistance is futile, agent! 😉",
-        "Pretty please with boba on top? 🧋"
-    ];
+    // --- DOM Elements ---
+    const avatarHead = document.getElementById('ninja-head');
+    const eyeLeftPupil = document.getElementById('eye-left-pupil');
+    const eyeRightPupil = document.getElementById('eye-right-pupil');
+    const mouth = document.getElementById('ninja-mouth');
+    const eyebrowLeft = document.getElementById('brow-left');
+    const eyebrowRight = document.getElementById('brow-right');
+    const blushLeft = document.getElementById('blush-left');
+    const blushRight = document.getElementById('blush-right');
+    const handLeft = document.getElementById('hand-left');
+    const handRight = document.getElementById('hand-right');
+    const speechBubble = document.getElementById('speech-bubble');
 
-    // Mouse Tracking Eye Effect
-    document.addEventListener('mousemove', (e) => {
-        const rect = ninjaAvatar.getBoundingClientRect();
-        const avatarX = rect.left + rect.width / 2;
-        const avatarY = rect.top + rect.height / 2;
+    const btnYes = document.getElementById('btn-yes');
+    const btnNo = document.getElementById('btn-no');
+    const boundary = document.getElementById('button-boundary');
 
-        const angle = Math.atan2(e.clientY - avatarY, e.clientX - avatarX);
-        const distance = Math.min(4, Math.hypot(e.clientX - avatarX, e.clientY - avatarY) / 30);
+    const stepProposal = document.getElementById('step-proposal');
+    const stepPlanner = document.getElementById('step-planner');
+    const stepSummary = document.getElementById('step-summary');
 
-        const pupilX = Math.cos(angle) * distance;
-        const pupilY = Math.sin(angle) * distance;
+    // Default Date Setup
+    document.getElementById('date-picker').value = state.date;
 
-        const pupils = document.querySelectorAll('.pupil');
-        pupils.forEach(p => {
-            p.style.transform = `translate(${pupilX}px, ${pupilY}px)`;
-        });
-    });
+    // --- Ambient Particle Generator ---
+    function initParticles() {
+      const container = document.getElementById('particle-container');
+      const symbols = ['🌸', '✨', '💖', '🥷', '🍃', '⭐'];
 
-    // Background Particle Generator
-    const particlesContainer = document.getElementById('particlesContainer');
-    for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 18; i++) {
         const p = document.createElement('div');
-        p.classList.add('particle');
-        p.style.left = `${Math.random() * 100}%`;
-        p.style.width = `${Math.random() * 6 + 4}px`;
-        p.style.height = p.style.width;
-        p.style.animationDuration = `${Math.random() * 6 + 6}s`;
+        p.className = 'particle';
+        p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        p.style.left = `${Math.random() * 100}vw`;
+        p.style.animationDuration = `${6 + Math.random() * 6}s`;
         p.style.animationDelay = `${Math.random() * 5}s`;
-        particlesContainer.appendChild(p);
+        p.style.fontSize = `${14 + Math.random() * 12}px`;
+        container.appendChild(p);
+      }
+    }
+    initParticles();
+
+    // --- Mouse Eye-Tracking & Head Movement ---
+    document.addEventListener('mousemove', (e) => {
+      const rect = avatarHead.getBoundingClientRect();
+      const headCenterX = rect.left + rect.width / 2;
+      const headCenterY = rect.top + rect.height / 2;
+
+      const deltaX = e.clientX - headCenterX;
+      const deltaY = e.clientY - headCenterY;
+
+      // Limit pupil shift
+      const moveX = Math.max(-4, Math.min(4, deltaX / 40));
+      const moveY = Math.max(-3, Math.min(3, deltaY / 40));
+
+      eyeLeftPupil.setAttribute('transform', `translate(${moveX}, ${moveY})`);
+      eyeRightPupil.setAttribute('transform', `translate(${moveX}, ${moveY})`);
+
+      // Gentle head tilt
+      const tiltX = Math.max(-6, Math.min(6, deltaX / 60));
+      const tiltY = Math.max(-4, Math.min(4, deltaY / 60));
+      avatarHead.style.transform = `translate(${tiltX}px, ${tiltY}px)`;
+    });
+
+    // --- Avatar Expression Controller ---
+    function setAvatarExpression(mood) {
+      switch (mood) {
+        case 'excited':
+          mouth.setAttribute('d', 'M 92 84 Q 100 94, 108 84'); // Big smile
+          eyebrowLeft.setAttribute('d', 'M 80 64 Q 87 60, 93 65');
+          eyebrowRight.setAttribute('d', 'M 107 65 Q 113 60, 120 64');
+          blushLeft.style.opacity = '0.8';
+          blushRight.style.opacity = '0.8';
+          handLeft.style.transform = 'translateY(-12px) scale(1.1)';
+          handRight.style.transform = 'translateY(-12px) scale(1.1)';
+          break;
+
+        case 'pleading':
+          mouth.setAttribute('d', 'M 94 88 Q 100 82, 106 88'); // Sad frown
+          eyebrowLeft.setAttribute('d', 'M 80 68 Q 87 72, 93 68');
+          eyebrowRight.setAttribute('d', 'M 107 68 Q 113 72, 120 68');
+          blushLeft.style.opacity = '0.2';
+          blushRight.style.opacity = '0.2';
+          handLeft.style.transform = 'translate(8px, -5px)';
+          handRight.style.transform = 'translate(-8px, -5px)';
+          break;
+
+        case 'overjoyed':
+          mouth.setAttribute('d', 'M 90 82 Q 100 100, 110 82 Z'); // Open joyful mouth
+          mouth.setAttribute('fill', '#f43f5e');
+          blushLeft.style.opacity = '1';
+          blushRight.style.opacity = '1';
+          handLeft.style.transform = 'translateY(-22px) rotate(-15deg)';
+          handRight.style.transform = 'translateY(-22px) rotate(15deg)';
+          speechBubble.innerText = "YAY!! It's a date! 🎉🥷";
+          break;
+
+        case 'neutral':
+        default:
+          mouth.setAttribute('d', 'M 94 85 Q 100 87, 106 85');
+          mouth.setAttribute('fill', 'none');
+          eyebrowLeft.setAttribute('d', 'M 80 67 Q 87 65, 93 68');
+          eyebrowRight.setAttribute('d', 'M 107 68 Q 113 65, 120 67');
+          blushLeft.style.opacity = '0';
+          blushRight.style.opacity = '0';
+          handLeft.style.transform = 'translate(0,0)';
+          handRight.style.transform = 'translate(0,0)';
+          break;
+      }
     }
 
-    // Playful "No" Button Dodge & Reaction
-    noBtn.addEventListener('mouseover', () => {
-        noHoverCount++;
-        
-        // Cycle through funny button labels
-        const phraseIndex = Math.min(noHoverCount, noPhrases.length - 1);
-        noBtn.textContent = noPhrases[phraseIndex];
-
-        // Random jump location within bounds
-        const xOffset = (Math.random() - 0.5) * 160;
-        const yOffset = (Math.random() - 0.5) * 80;
-        noBtn.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-
-        // Make Avatar look pleading / worried
-        speechBubble.textContent = avatarDialogues[noHoverCount % avatarDialogues.length];
-        leftEyebrow.style.transform = 'rotate(15deg)';
-        rightEyebrow.style.transform = 'rotate(-15deg)';
-        mouth.style.borderRadius = '50%';
-        mouth.style.height = '12px';
-        mouth.style.width = '14px';
-        leftArm.style.transform = 'rotate(-30deg)';
-        rightArm.style.transform = 'rotate(30deg)';
+    // --- Hover Receptivity on Yes Button ---
+    btnYes.addEventListener('mouseenter', () => {
+      setAvatarExpression('excited');
+      speechBubble.innerText = "Press it! Press YES! 💖";
+    });
+    btnYes.addEventListener('mouseleave', () => {
+      setAvatarExpression('neutral');
+      speechBubble.innerText = "Pssst... I have a proposal! 🥷";
     });
 
-    noBtn.addEventListener('mouseleave', () => {
-        // Reset facial expression slightly
-        setTimeout(() => {
-            leftEyebrow.style.transform = 'rotate(-5deg)';
-            rightEyebrow.style.transform = 'rotate(5deg)';
-            mouth.style.borderRadius = '0 0 10px 10px';
-            mouth.style.height = '10px';
-            mouth.style.width = '18px';
-            leftArm.style.transform = 'rotate(15deg)';
-            rightArm.style.transform = 'rotate(-15deg)';
-        }, 300);
+    // --- Runaway "No" Button Mechanics ---
+    const noDialogues = [
+      "Are you sure? 🥺",
+      "Catch me if you can! 🥷",
+      "Shadow Clone Jutsu! 💨",
+      "Nice try! 😜",
+      "Wrong button! 💖",
+      "Too slow! ⚡",
+      "You know you want to say Yes! 😉"
+    ];
+
+    function dodgeNoButton() {
+      state.noHoverCount++;
+      setAvatarExpression('pleading');
+
+      // Update Speech Dialogue
+      const dialogue = noDialogues[Math.min(state.noHoverCount - 1, noDialogues.length - 1)];
+      speechBubble.innerText = dialogue;
+
+      // Calculate safe runaway position inside boundary
+      const bRect = boundary.getBoundingClientRect();
+      const btnRect = btnNo.getBoundingClientRect();
+
+      const maxX = bRect.width - btnRect.width - 20;
+      const maxY = bRect.height - btnRect.height - 10;
+
+      const randomX = (Math.random() * maxX) - (maxX / 2);
+      const randomY = (Math.random() * maxY) - (maxY / 2);
+
+      btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    }
+
+    btnNo.addEventListener('mouseenter', dodgeNoButton);
+    btnNo.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      dodgeNoButton();
     });
 
-    // "Yes" Button Click -> Transition to Date Planner
-    yesBtn.addEventListener('click', () => {
-        // Overjoyed Avatar Reaction
-        speechBubble.textContent = "MISSION SUCCESS! Best day ever! 🎉✨";
-        mouth.style.borderRadius = '0 0 15px 15px';
-        mouth.style.height = '14px';
-        mouth.style.width = '22px';
-        leftArm.style.transform = 'rotate(-60deg)';
-        rightArm.style.transform = 'rotate(60deg)';
+    // --- YES Button Click Handler ---
+    btnYes.addEventListener('click', () => {
+      setAvatarExpression('overjoyed');
 
-        // Trigger celebratory confetti effect
-        createConfetti();
-
-        // Smooth card transition
-        mainCard.style.opacity = '0';
-        setTimeout(() => {
-            mainCard.classList.add('hidden');
-            datePlanner.classList.remove('hidden');
-        }, 300);
-    });
-
-    // Chip Selection Logic
-    setupChipGroup('activityChips');
-    setupChipGroup('snackChips');
-
-    function setupChipGroup(containerId) {
-        const container = document.getElementById(containerId);
-        const chips = container.querySelectorAll('.chip');
-        chips.forEach(chip => {
-            chip.addEventListener('click', () => {
-                chips.forEach(c => c.classList.remove('active'));
-                chip.classList.add('active');
-            });
+      // Trigger Confetti Explosion
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 120,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#f43f5e', '#ec4899', '#818cf8', '#fbbf24']
         });
-    }
+      }
 
-    // Seal Deal & Show Final Summary Scroll
-    sealDealBtn.addEventListener('click', () => {
-        const selectedActivity = document.querySelector('#activityChips .chip.active').getAttribute('data-value');
-        const selectedSnack = document.querySelector('#snackChips .chip.active').getAttribute('data-value');
-        const dateTime = document.getElementById('dateTimeInput').value;
-
-        const summaryBox = document.getElementById('missionSummary');
-        summaryBox.innerHTML = `
-            <strong>🎯 Operation:</strong> Ninja Date Night<br>
-            <strong>🍜 Activity:</strong> ${selectedActivity}<br>
-            <strong>🕒 Schedule:</strong> ${dateTime}<br>
-            <strong>🎁 Perk / Snack:</strong> ${selectedSnack}<br>
-            <strong>🔒 Status:</strong> Fully Confirmed & Locked In!
-        `;
-
-        datePlanner.style.opacity = '0';
-        setTimeout(() => {
-            datePlanner.classList.add('hidden');
-            successScroll.classList.remove('hidden');
-        }, 300);
+      // Transition smoothly to Planner Step
+      setTimeout(() => {
+        stepProposal.classList.add('hidden');
+        stepPlanner.classList.remove('hidden');
+      }, 600);
     });
 
-    // Copy Summary Button
-    const copySummaryBtn = document.getElementById('copySummaryBtn');
-    copySummaryBtn.addEventListener('click', () => {
-        const summaryText = document.getElementById('missionSummary').innerText;
-        navigator.clipboard.writeText(`🥷✨ MISSION CONFIRMED ✨🥷\n\n${summaryText}`).then(() => {
-            copySummaryBtn.textContent = '✅ Copied to Clipboard!';
-            setTimeout(() => {
-                copySummaryBtn.textContent = '📋 Copy Mission Details';
-            }, 2500);
+    // --- Activity Selection Logic ---
+    const activityBtns = document.querySelectorAll('#activity-options .option-btn');
+    activityBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        activityBtns.forEach(b => {
+          b.classList.remove('active', 'bg-rose-500/20', 'border-rose-500/50', 'text-rose-200');
+          b.classList.add('bg-slate-800/80', 'border-slate-700', 'text-slate-300');
         });
+
+        btn.classList.add('active', 'bg-rose-500/20', 'border-rose-500/50', 'text-rose-200');
+        btn.classList.remove('bg-slate-800/80', 'border-slate-700', 'text-slate-300');
+
+        state.selectedActivity = btn.getAttribute('data-value');
+      });
     });
 
-    // Confetti Effect Helper
-    function createConfetti() {
-        for (let i = 0; i < 50; i++) {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.left = `${Math.random() * 100}vw`;
-            confetti.style.top = `-10px`;
-            confetti.style.width = `${Math.random() * 8 + 6}px`;
-            confetti.style.height = `${Math.random() * 8 + 6}px`;
-            confetti.style.backgroundColor = ['#ff3366', '#6366f1', '#10b981', '#fbbf24', '#38bdf8'][Math.floor(Math.random() * 5)];
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-            confetti.style.zIndex = '9999';
-            confetti.style.pointerEvents = 'none';
-            document.body.appendChild(confetti);
+    // --- Lock In Date / Summary Generation ---
+    document.getElementById('btn-lock-in').addEventListener('click', () => {
+      state.date = document.getElementById('date-picker').value || state.date;
+      state.time = document.getElementById('time-picker').value || state.time;
+      state.snack = document.getElementById('snack-select').value;
 
-            const duration = Math.random() * 2 + 1.5;
-            const xEnd = (Math.random() - 0.5) * 200;
+      document.getElementById('sum-activity').innerText = state.selectedActivity;
+      document.getElementById('sum-date').innerText = state.date;
+      document.getElementById('sum-time').innerText = state.time;
+      document.getElementById('sum-snack').innerText = state.snack;
 
-            confetti.style.transition = `transform ${duration}s ease-out, opacity ${duration}s ease-out`;
-            
-            setTimeout(() => {
-                confetti.style.transform = `translate(${xEnd}px, 100vh) rotate(${Math.random() * 360}deg)`;
-                confetti.style.opacity = '0';
-            }, 50);
+      stepPlanner.classList.add('hidden');
+      stepSummary.classList.remove('hidden');
 
-            setTimeout(() => {
-                confetti.remove();
-            }, duration * 1000);
-        }
-    }
-});
+      if (typeof confetti === 'function') {
+        confetti({ particleCount: 50, spread: 60, origin: { y: 0.7 } });
+      }
+    });
+
+    // --- Copy Shareable Summary to Clipboard ---
+    document.getElementById('btn-copy').addEventListener('click', async () => {
+      const summaryText = `🥷 Secret Date Invitation Sealed!\n\nActivity: ${state.selectedActivity}\nDate: ${state.date}\nTime: ${state.time}\nSnack Target: ${state.snack}\n\nSee you there! ✨`;
+      const copyBtn = document.getElementById('btn-copy');
+
+      try {
+        await navigator.clipboard.writeText(summaryText);
+        copyBtn.innerHTML = '<span>✅ Copied!</span>';
+        setTimeout(() => {
+          copyBtn.innerHTML = '<span>📋 Copy Invite</span>';
+        }, 2000);
+      } catch (error) {
+        console.error('Unable to copy the invite:', error);
+        copyBtn.innerHTML = '<span>⚠️ Copy failed</span>';
+        setTimeout(() => {
+          copyBtn.innerHTML = '<span>📋 Copy Invite</span>';
+        }, 2000);
+      }
+    });
+
+    // --- Edit Details / Reset Flow ---
+    document.getElementById('btn-restart').addEventListener('click', () => {
+      stepSummary.classList.add('hidden');
+      stepPlanner.classList.remove('hidden');
+    });
